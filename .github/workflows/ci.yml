@@ -17,7 +17,7 @@ jobs:
       - name: Build image
         run: docker buildx build . -o type=oci,dest=image.tar
       - name: Push image to Caasis
-        run: gzip -c image.tar | curl -Lu "$CAASIS_API_KEY" --data-binary @- https://oss2.caasis.cloud/new | tee ~/url
+        run: gzip -c image.tar | curl -Lu "$CAASIS_API_KEY" --data-binary @- https://api.caasis.cloud/new | tee ~/url
         if: ${{ github.head_ref }}
         env:
           CAASIS_API_KEY: ${{ secrets.CAASIS_API_KEY }}
