@@ -17,12 +17,12 @@ jobs:
       - name: Build image
         run: docker buildx build . -o type=oci,dest=image.tar
       - name: Push image to Caasis
-        run: gzip -c image.tar | curl -Lu "$CAASIS_API_KEY" --data-binary @- https://api.caasis.cloud/new/${{ github.event.pull_request.html_url }} | tee ~/url
+        run: gzip -c image.tar | curl -Lu "$CAASIS_API_KEY" --data-binary @- https://api.caasis.cloud/new/$GITHUB_REPOSITORY/$GITHUB_HEAD_REF | tee ~/url
         if: ${{ github.head_ref }}
         env:
           CAASIS_API_KEY: ${{ secrets.CAASIS_API_KEY }}
       - name: Comment on Pull Request
-        run: 'echo "Preview environment: $(cat ~/url)" | gh pr comment --create-if-none --edit-last ${{ github.head_ref }} -F-'
+        run: 'echo "Preview environment: $(cat ~/url)" | gh pr comment --create-if-none --edit-last $GITHUB_HEAD_REF -F-'
         if: ${{ github.head_ref }}
         env:
           GH_TOKEN: ${{ github.token }}
